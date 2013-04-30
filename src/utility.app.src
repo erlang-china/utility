@@ -1,0 +1,8 @@
+%% 0.2 add utility_sysinfo
+{application, utility, [
+	{description, "common utility lib"},
+	{vsn, "0.2"},
+	{registered, []},
+	{applications, []},
+	{modules, []}
+]}.
