@@ -13,3 +13,9 @@ deps:
 clean:
 	$(REBAR) clean
 	-rm -rvf deps ebin doc .eunit
+
+console:
+	erl -pa ./ebin
+
+win_console:
+	werl -pa ./ebin
