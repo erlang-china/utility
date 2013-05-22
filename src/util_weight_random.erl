@@ -79,7 +79,7 @@ generate_random_nums(Count, MaxNum, AccOut)->
 
 generate_random_num(0,     _Generated)->0;
 generate_random_num(MaxNum, Generated)->
-    Num = crypto:rand_uniform(0, MaxNum) + 1,
+    Num = random:uniform(MaxNum),
     case lists:member(Num, Generated) of 
          true->
             generate_random_num(MaxNum, Generated);
