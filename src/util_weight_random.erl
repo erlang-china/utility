@@ -23,6 +23,7 @@ get_random_data(GetCount,Datas) when is_list(Datas)->
     Length = length(Datas),
     case Length > GetCount of 
         true->
+            random:seed(os:timestamp()),
             Indexs = generate_random_nums(GetCount, Length, []),
             Ret    = [lists:nth(Index,Datas)||Index<- Indexs],
             {length(Ret), Ret};
@@ -32,6 +33,7 @@ get_random_data(GetCount,Datas) when is_list(Datas)->
 
 get_random_data(_GetCount, _WeightPos, [])-> {0, []};
 get_random_data(GetCount, WeightPos, Datas) when is_list(Datas)->
+    random:seed(os:timestamp()),
     Data = get_random_data_1(GetCount, WeightPos, Datas, []),
     {length(Data), Data}.
 
