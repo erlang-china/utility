@@ -29,18 +29,17 @@ load_app_env(EnvFile) ->
 load_app_env(AppName, EnvFile) ->
     case file:consult(EnvFile) of
         {ok, Terms} ->
-            Envs = proplists:get_value(AppName, Terms),
+            Envs         = proplists:get_value(AppName, Terms),
             OriginalEnvs = application:get_all_env(AppName),
-            
-            NewEnvKeys = 
+            NewEnvKeys   = 
             [ begin 
                 ok = application:set_env(AppName, Par, Val),
                 Par
               end
               ||{Par, Val} <-Envs],
-            [ok = application:unset_env(AppName, Par) 
+            [ ok = application:unset_env(AppName, Par) 
               ||{Par , _Val} <-OriginalEnvs, 
-               lists:member(Par, NewEnvKeys) =:= false],
+                lists:member(Par, NewEnvKeys) =:= false],
             ok;
         Error ->
             Error
