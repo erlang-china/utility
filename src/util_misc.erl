@@ -16,17 +16,20 @@
 
 -module(util_misc).
 
--export([load_app_env/1, load_app_env/2]).
+-export([load_app_env/1, load_app_env/2, load_app_env/3]).
 
 load_app_env(EnvFile) ->
     case application:get_application() of 
         {ok, AppName} ->
-            load_app_env(AppName, EnvFile);
+            load_app_env(AppName, EnvFile, []);
         undefined ->
             {error, unknown_application}
     end.
 
 load_app_env(AppName, EnvFile) ->
+    load_app_env(AppName, EnvFile, []).
+
+load_app_env(AppName, EnvFile, KeepPars) when is_list(KeepPars) ->
     case file:consult(EnvFile) of
         {ok, Terms} ->
             Envs         = proplists:get_value(AppName, Terms),
@@ -36,7 +39,7 @@ load_app_env(AppName, EnvFile) ->
                 ok = application:set_env(AppName, Par, Val),
                 Par
               end
-              ||{Par, Val} <-Envs],
+              ||{Par, Val} <-Envs] ++ KeepPars,
             [ ok = application:unset_env(AppName, Par) 
               ||{Par , _Val} <-OriginalEnvs, 
                 lists:member(Par, NewEnvKeys) =:= false],
