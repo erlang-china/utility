@@ -18,6 +18,8 @@
 
 -export([load_app_env/1, load_app_env/2, load_app_env/3]).
 
+-export([check_callback/2]).
+
 load_app_env(EnvFile) ->
     case application:get_application() of 
         {ok, AppName} ->
@@ -46,4 +48,17 @@ load_app_env(AppName, EnvFile, KeepPars) when is_list(KeepPars) ->
             ok;
         Error ->
             Error
+    end.
+    
+check_callback(undefined, _Module) -> {error, behaviour_undefined};
+check_callback(_ModBehaviour, undefined) -> {error, module_undefined};
+check_callback(ModBehaviour, Module) ->
+    Behaviours    = ModBehaviour:behaviour_info(callbacks),
+    ModuleExports = Module:module_info(exports),
+    UnExported    = Behaviours -- ModuleExports,
+    case UnExported of 
+        [] ->
+            ok;
+        UnE ->
+            {error,{function_unexported, UnE}}
     end.
