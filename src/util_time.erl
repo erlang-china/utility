@@ -37,8 +37,8 @@ string_now()->
     lists:flatten(io_lib:format("~4..0w~2..0w~2..0w~2..0w~2..0w~2..0w",[YYYY, Mm, DD, HH, MM, SS])).
     
 string_now_micro()->
-    {{YYYY,Mm,DD},{HH,MM,SS}} = erlang:localtime(),
-    {_MegaSecs, _Secs, MicroSecs} = os:timestamp(),
+    {MegaSecs, Secs, MicroSecs} = os:timestamp(),
+    {{YYYY,Mm,DD},{HH,MM,SS}}   = calendar:now_to_local_time({MegaSecs, Secs, MicroSecs}),
     lists:flatten(io_lib:format("~4..0w~2..0w~2..0w~2..0w~2..0w~2..0w~3..0w",[YYYY, Mm, DD, HH, MM, SS, MicroSecs])).
 
 string_tick()->
